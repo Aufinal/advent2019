@@ -1,0 +1,2 @@
+#!/bin/sh
+./exec/$1 inputs/$1.txt
