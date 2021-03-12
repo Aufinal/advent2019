@@ -1,14 +1,12 @@
 CC = g++
-CFLAGS=-std=c++20
-
+CFLAGS = -std=c++20
 SRCS = $(wildcard src/*.cpp)
-
-PROGS = $(patsubst src/%.cpp,exec/%,$(SRCS))
+PROGS = $(patsubst src/%.cpp,%,$(SRCS))
 
 
 all: $(PROGS)
 
-exec/%: src/%.cpp
-	$(CC) $(CFLAGS) -o $@ $<
+%: src/%.cpp
+	$(CC) $(CFLAGS) -o exec/$@ $<
 clean: 
-	rm -f $(PROGS)
+	rm -f exec/$(PROGS)
