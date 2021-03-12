@@ -1,8 +1,8 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 using namespace std;
 
@@ -12,7 +12,7 @@ vector<int> readlines_to_int(string filename) {
     string line;
     if (file.is_open()) {
         while (getline(file, line)) {
-            vec.push_back(atoi(line.c_str()));
+            vec.push_back(stoi(line));
         }
     }
     file.close();
@@ -21,7 +21,7 @@ vector<int> readlines_to_int(string filename) {
 
 int part_1(vector<int> &vec) {
     int sum = 0;
-    for (auto &elt: vec) {
+    for (auto &elt : vec) {
         sum += elt / 3 - 2;
     }
 
@@ -30,7 +30,7 @@ int part_1(vector<int> &vec) {
 
 int part_2(vector<int> &vec) {
     int sum = 0;
-    for (auto&& elt: vec) {
+    for (auto &&elt : vec) {
         while (elt > 5) {
             elt = elt / 3 - 2;
             sum += elt;
@@ -39,7 +39,7 @@ int part_2(vector<int> &vec) {
     return sum;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     if (argc < 2) {
         throw invalid_argument("Must supply filename !");
     }
@@ -49,5 +49,4 @@ int main(int argc, char* argv[]) {
     cout << "Part 2 : " << part_2(vec) << endl;
 
     return 0;
-
 }
