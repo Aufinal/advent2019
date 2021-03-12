@@ -30,7 +30,7 @@ vector<int> parseint(const vector<string> &vec) {
 }
 
 template <class T>
-string join(T &vec, string delim = ",") {
+string join(T &&vec, string delim = ",") {
     stringstream res;
     auto it = vec.begin();
     res << *it++;

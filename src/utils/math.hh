@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <complex>
 
 using namespace std;
@@ -22,3 +23,14 @@ struct hash<complex<T>> {
     }
 };
 }  // namespace std
+
+vector<int> digits(int x, int b = 10) {
+    vector<int> res;
+    while (x != 0) {
+        res.push_back(x % b);
+        x /= b;
+    }
+
+    reverse(res.begin(), res.end());
+    return res;
+}
