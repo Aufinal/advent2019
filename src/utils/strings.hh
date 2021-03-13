@@ -7,7 +7,7 @@ using namespace std;
 vector<string> split(const string &s, char c = ',') {
     vector<string> v;
     int i = 0;
-    int j = s.find(c);
+    size_t j = s.find(c);
 
     while (j != string::npos) {
         v.push_back(s.substr(i, j - i));

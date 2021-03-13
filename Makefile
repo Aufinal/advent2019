@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++20
+CFLAGS = -Wall -std=c++20
 SRCS = $(wildcard src/*.cpp)
 PROGS = $(patsubst src/%.cpp,%,$(SRCS))
 
