@@ -37,8 +37,6 @@ int part_1(vector<int>& image, int x_len, int y_len) {
 }
 
 void part_2(vector<int>& image, int x_len, int y_len) {
-    for (int j = 0; j <= x_len; j++) cout << "\u2588\u2588";
-    cout << endl;
     for (int i = 0; i < y_len; i++) {
         cout << "\u2588\u2588";
         for (int j = 0; j < x_len; j++) {
@@ -51,8 +49,6 @@ void part_2(vector<int>& image, int x_len, int y_len) {
         }
         cout << endl;
     }
-    for (int j = 0; j <= x_len; j++) cout << "\u2588\u2588";
-    cout << endl;
 }
 
 int main(int argc, char* argv[]) {

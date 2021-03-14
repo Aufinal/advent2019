@@ -17,10 +17,10 @@ vector<string> split(const string &str, const string &delim = ",") {
     return tokens;
 }
 
-vector<int> parseint(const vector<string> &vec) {
-    vector<int> res;
+vector<long> parseint(const vector<string> &vec) {
+    vector<long> res;
     for (auto elt : vec) {
-        res.push_back(stoi(elt));
+        res.push_back(stol(elt));
     }
 
     return res;

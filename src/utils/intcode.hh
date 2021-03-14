@@ -7,21 +7,22 @@
 #include "strings.hh"
 
 class IntCode {
-    vector<int> memory;
-    queue<int> inputs;
+    unordered_map<long, long> memory;
+    queue<long> inputs;
 
-    int cursor;
+    long cursor;
+    long offset;
 
-    tuple<int, int, int> _parse(int instr) {
+    tuple<short, short, short, short> _parse(int instr) {
         int t = instr % 100;
         instr /= 100;
 
-        return make_tuple(t, instr % 10, instr / 10);
+        return make_tuple(t, instr % 10, (instr / 10) % 10, (instr / 100) % 10);
     }
 
    public:
-    vector<int> program;
-    IntCode(vector<int> prog) { program = prog; }
+    vector<long> program;
+    IntCode(vector<long> prog) { program = prog; }
     IntCode(string filename) {
         ifstream file(filename);
         string line;
@@ -33,86 +34,96 @@ class IntCode {
     void add_input() {}
 
     template <typename... Args>
-    void add_input(int i, Args... args) {
+    void add_input(long i, Args... args) {
         inputs.push(i);
         add_input(args...);
     }
 
-    int read(int pos, int depth) {
-        if (depth <= 0) {
-            return pos;
+    long read(short mode) {
+        if (mode == 1) {
+            return memory[cursor++];
         } else {
-            return read(memory[pos], depth - 1);
+            long address = (mode / 2) * offset + memory[cursor++];
+            return memory[address];
         }
     }
 
-    int read(int mode) { return read(cursor++, 2 - mode); }
-
-    void write(int value, int pos, int depth = 2) {
-        if (depth == 1) {
-            memory[pos] = value;
-        } else {
-            write(value, memory[pos], depth - 1);
-        }
+    void write(long value, short mode) {
+        long address = (mode / 2) * offset + memory[cursor++];
+        memory[address] = value;
     }
 
-    void write(int value) { write(value, cursor++, 2); }
-
-    int run() {
-        auto [opcode, m1, m2] = _parse(memory[cursor++]);
-        switch (opcode) {
-            case 1: {
-                write(read(m1) + read(m2));
-                break;
-            }
-            case 2: {
-                write(read(m1) * read(m2));
-                break;
-            }
-            case 3: {
-                write(inputs.front());
-                inputs.pop();
-                break;
-            }
-            case 4:
-                return read(m1);
-            case 5: {
-                if (read(m1) != 0) {
-                    int new_cursor = read(m2);
-                    cursor = new_cursor;
-                } else {
-                    cursor++;
+    long run() {
+        while (true) {
+            auto [opcode, m1, m2, m3] = _parse(memory[cursor++]);
+            switch (opcode) {
+                case 1: {
+                    write(read(m1) + read(m2), m3);
+                    break;
                 }
-                break;
-            }
-            case 6: {
-                if (read(m1) == 0) {
-                    int new_cursor = read(m2);
-                    cursor = new_cursor;
-                } else {
-                    cursor++;
+                case 2: {
+                    write(read(m1) * read(m2), m3);
+                    break;
                 }
-                break;
+                case 3: {
+                    write(inputs.front(), m1);
+                    inputs.pop();
+                    break;
+                }
+                case 4:
+                    return read(m1);
+                case 5: {
+                    if (read(m1) != 0) {
+                        long new_cursor = read(m2);
+                        cursor = new_cursor;
+                    } else {
+                        cursor++;
+                    }
+                    break;
+                }
+                case 6: {
+                    if (read(m1) == 0) {
+                        long new_cursor = read(m2);
+                        cursor = new_cursor;
+                    } else {
+                        cursor++;
+                    }
+                    break;
+                }
+                case 7: {
+                    long lhs = read(m1);
+                    write(lhs < read(m2), m3);
+                    break;
+                }
+                case 8: {
+                    write(read(m1) == read(m2), m3);
+                    break;
+                }
+                case 9: {
+                    offset += read(m1);
+                    break;
+                }
+                case 99:
+                    return -1;
             }
-            case 7: {
-                int lhs = read(m1);
-                write((int)(lhs < read(m2)));
-                break;
-            }
-            case 8: {
-                write((int)(read(m1) == read(m2)));
-                break;
-            }
-            case 99:
-                return -1;
         }
 
-        return run();
+        return -2;
     }
 
     void init() {
-        memory = program;
+        memory.clear();
+        int idx = 0;
+        for (auto elt : program) memory[idx++] = elt;
         cursor = 0;
-        std::queue<int>().swap(inputs);
+        offset = 0;
+        std::queue<long>().swap(inputs);
+    }
+
+    template <typename... Args>
+    long start(Args... args) {
+        init();
+        add_input(args...);
+        return run();
     }
 };
