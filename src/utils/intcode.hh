@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <queue>
@@ -20,7 +21,7 @@ class IntCode {
 
    public:
     vector<int> program;
-    IntCode(vector<int> program) { program = program; }
+    IntCode(vector<int> prog) { program = prog; }
     IntCode(string filename) {
         ifstream file(filename);
         string line;
@@ -29,7 +30,13 @@ class IntCode {
         }
     }
 
-    void add_input(int input) { inputs.push(input); }
+    void add_input() {}
+
+    template <typename... Args>
+    void add_input(int i, Args... args) {
+        inputs.push(i);
+        add_input(args...);
+    }
 
     int read(int pos, int depth) {
         if (depth <= 0) {
