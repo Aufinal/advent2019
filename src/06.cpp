@@ -15,7 +15,7 @@ tuple<umss, umsvs> parse(string filename) {
     string line;
     if (file.is_open()) {
         while (getline(file, line)) {
-            vector<string> v = split(line, ')');
+            vector<string> v = split(line, ")");
             if (children.count(v[0])) {
                 children[v[0]].push_back(v[1]);
             } else {

@@ -4,20 +4,17 @@
 
 using namespace std;
 
-vector<string> split(const string &s, char c = ',') {
-    vector<string> v;
-    int i = 0;
-    size_t j = s.find(c);
+vector<string> split(const string &str, const string &delim = ",") {
+    vector<string> tokens;
+    size_t prev = 0, pos = 0;
 
-    while (j != string::npos) {
-        v.push_back(s.substr(i, j - i));
-        i = ++j;
-        j = s.find(c, j);
+    do {
+        pos = str.find(delim, prev);
+        tokens.push_back(str.substr(prev, pos - prev));
+        prev = pos + delim.length();
+    } while (pos != string::npos);
 
-        if (j == string::npos) v.push_back(s.substr(i, s.length()));
-    }
-
-    return v;
+    return tokens;
 }
 
 vector<int> parseint(const vector<string> &vec) {
