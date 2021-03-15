@@ -49,3 +49,8 @@ vector<int> digits(int x, int b = 10) {
     reverse(res.begin(), res.end());
     return res;
 }
+
+template <typename T>
+int sgn(T x, T y = T(0)) {
+    return (y < x) - (x < y);
+}
