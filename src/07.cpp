@@ -10,7 +10,8 @@ int chain(vector<IntCode> &ics, vector<int> inputs, int initial) {
         ic.init();
         ic.add_input(inputs[idx++]);
         ic.add_input(out);
-        out = ic.run();
+        ic.run();
+        out = ic.get_output();
     }
 
     return out;
@@ -19,7 +20,6 @@ int chain(vector<IntCode> &ics, vector<int> inputs, int initial) {
 int chain_rec(vector<IntCode> &ics, vector<int> inputs, int initial) {
     int out = initial;
     int idx = 0;
-    int prev_out = 0;
 
     for (auto &ic : ics) {
         ic.init();
@@ -27,14 +27,14 @@ int chain_rec(vector<IntCode> &ics, vector<int> inputs, int initial) {
     }
 
     idx = 0;
-    while (out != -1) {
-        prev_out = out;
+    while (ics[idx].state != done) {
         ics[idx].add_input(out);
-        out = ics[idx].run();
+        ics[idx].run();
+        out = ics[idx].get_output();
         idx = (idx + 1) % 5;
     }
 
-    return prev_out;
+    return out;
 }
 
 int part_1(vector<IntCode> &ics) {

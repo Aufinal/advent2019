@@ -29,6 +29,7 @@ class IntCode {
     vector<long> program;
     State state;
     queue<long> outputs;
+
     IntCode(vector<long> prog) { program = prog; }
     IntCode(string filename) {
         ifstream file(filename);
@@ -48,14 +49,22 @@ class IntCode {
 
     bool has_output() { return !outputs.empty(); }
 
-    vector<int> get_outputs(short n) {
-        vector<int> res(n, 0);
+    long get_output() {
+        long res = outputs.front();
+        outputs.pop();
+        return res;
+    }
+
+    vector<long> get_outputs(short n) {
+        vector<long> res(n, 0);
         for (int i = 0; i < n; i++) {
             res[i] = outputs.front();
             outputs.pop();
         }
         return res;
     }
+
+    long output_mem(long address) { return memory[address]; }
 
     long read(short mode) {
         if (mode == 1) {

@@ -1,20 +1,18 @@
 #include "utils/intcode.hh"
 
 int part_1(IntCode &ic) {
-    ic.init();
-    ic.add_input(1);
     int res;
-    do {
-        res = ic.run();
-    } while (res == 0);
+    ic.start(1);
+    while (ic.has_output()) {
+        res = ic.get_output();
+    }
 
     return res;
 }
 
 int part_2(IntCode &ic) {
-    ic.init();
-    ic.add_input(5);
-    return ic.run();
+    ic.start(5);
+    return ic.get_output();
 }
 
 int main(int argc, char *argv[]) {

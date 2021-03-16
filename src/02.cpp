@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 
 #include "utils/intcode.hh"
@@ -5,10 +6,9 @@
 int replace_and_run(IntCode &ic, int a, int b) {
     ic.program[1] = a;
     ic.program[2] = b;
-    ic.init();
-    ic.run();
+    ic.start();
 
-    return ic.read(0, 1);
+    return ic.output_mem(0);
 }
 
 int part_1(IntCode &ic) { return replace_and_run(ic, 12, 2); }
@@ -34,9 +34,9 @@ int main(int argc, char *argv[]) {
     auto ic = IntCode(filename);
 
     int res1 = part_1(ic);
-    // int res2 = part_2(ic, 19690720);
+    int res2 = part_2(ic, 19690720);
     cout << "Part 1 : " << res1 << endl;
-    // cout << "Part 2 : " << res2 << endl;
+    cout << "Part 2 : " << res2 << endl;
 
     return 0;
 }

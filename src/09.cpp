@@ -8,9 +8,13 @@ int main(int argc, char *argv[]) {
 
     auto ic = IntCode(filename);
 
-    // int res2 = part_2(ic);
-    cout << "Part 1 : " << ic.start(1) << endl;
-    cout << "Part 2 : " << ic.start(2) << endl;
+    ic.start(1);
+    auto res1 = ic.get_output();
+    ic.start(2);
+    auto res2 = ic.get_output();
+
+    cout << "Part 1 : " << res1 << endl;
+    cout << "Part 2 : " << res2 << endl;
 
     return 0;
 }
