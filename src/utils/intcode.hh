@@ -6,6 +6,11 @@
 
 #include "strings.hh"
 
+enum State {
+    ok,
+    done,
+    need_input,
+};
 class IntCode {
     unordered_map<long, long> memory;
     queue<long> inputs;
@@ -22,6 +27,8 @@ class IntCode {
 
    public:
     vector<long> program;
+    State state;
+    queue<long> outputs;
     IntCode(vector<long> prog) { program = prog; }
     IntCode(string filename) {
         ifstream file(filename);
@@ -39,6 +46,17 @@ class IntCode {
         add_input(args...);
     }
 
+    bool has_output() { return !outputs.empty(); }
+
+    vector<int> get_outputs(short n) {
+        vector<int> res(n, 0);
+        for (int i = 0; i < n; i++) {
+            res[i] = outputs.front();
+            outputs.pop();
+        }
+        return res;
+    }
+
     long read(short mode) {
         if (mode == 1) {
             return memory[cursor++];
@@ -53,62 +71,72 @@ class IntCode {
         memory[address] = value;
     }
 
-    long run() {
-        while (true) {
-            auto [opcode, m1, m2, m3] = _parse(memory[cursor++]);
-            switch (opcode) {
-                case 1: {
-                    write(read(m1) + read(m2), m3);
-                    break;
-                }
-                case 2: {
-                    write(read(m1) * read(m2), m3);
-                    break;
-                }
-                case 3: {
+    void advance() {
+        state = ok;
+        auto [opcode, m1, m2, m3] = _parse(memory[cursor++]);
+        switch (opcode) {
+            case 1: {
+                write(read(m1) + read(m2), m3);
+                break;
+            }
+            case 2: {
+                write(read(m1) * read(m2), m3);
+                break;
+            }
+            case 3: {
+                if (inputs.empty()) {
+                    cursor--;
+                    state = need_input;
+                } else {
                     write(inputs.front(), m1);
                     inputs.pop();
-                    break;
                 }
-                case 4:
-                    return read(m1);
-                case 5: {
-                    if (read(m1) != 0) {
-                        long new_cursor = read(m2);
-                        cursor = new_cursor;
-                    } else {
-                        cursor++;
-                    }
-                    break;
-                }
-                case 6: {
-                    if (read(m1) == 0) {
-                        long new_cursor = read(m2);
-                        cursor = new_cursor;
-                    } else {
-                        cursor++;
-                    }
-                    break;
-                }
-                case 7: {
-                    long lhs = read(m1);
-                    write(lhs < read(m2), m3);
-                    break;
-                }
-                case 8: {
-                    write(read(m1) == read(m2), m3);
-                    break;
-                }
-                case 9: {
-                    offset += read(m1);
-                    break;
-                }
-                case 99:
-                    return -1;
+                break;
             }
+            case 4:
+                outputs.push(read(m1));
+                break;
+            case 5: {
+                if (read(m1) != 0) {
+                    long new_cursor = read(m2);
+                    cursor = new_cursor;
+                } else {
+                    cursor++;
+                }
+                break;
+            }
+            case 6: {
+                if (read(m1) == 0) {
+                    long new_cursor = read(m2);
+                    cursor = new_cursor;
+                } else {
+                    cursor++;
+                }
+                break;
+            }
+            case 7: {
+                long lhs = read(m1);
+                write(lhs < read(m2), m3);
+                break;
+            }
+            case 8: {
+                write(read(m1) == read(m2), m3);
+                break;
+            }
+            case 9: {
+                offset += read(m1);
+                break;
+            }
+            case 99:
+                state = done;
+                break;
         }
+    }
 
-        return -2;
+    void run() {
+        do {
+            advance();
+        } while (state == ok);
     }
 
     void init() {
@@ -118,12 +146,14 @@ class IntCode {
         cursor = 0;
         offset = 0;
         std::queue<long>().swap(inputs);
+        std::queue<long>().swap(outputs);
+        state = ok;
     }
 
     template <typename... Args>
-    long start(Args... args) {
+    void start(Args... args) {
         init();
         add_input(args...);
-        return run();
+        run();
     }
 };

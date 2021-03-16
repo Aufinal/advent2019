@@ -52,5 +52,5 @@ vector<int> digits(int x, int b = 10) {
 
 template <typename T>
 int sgn(T x, T y = T(0)) {
-    return (y < x) - (x < y);
+    return (y < x) - (x < y);  // sign(x - y)
 }

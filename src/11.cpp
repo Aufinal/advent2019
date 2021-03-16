@@ -8,15 +8,13 @@ unordered_map<complex<int>, int> paint(IntCode &ic, int start) {
     unordered_map<complex<int>, int> board;
     ic.init();
     board[pos] = start;
-    int out = 0;
 
-    while (true) {
+    while (ic.state != done) {
         ic.add_input(board[pos]);
-        out = ic.run();
-        if (out == -1) break;
-        board[pos] = out;
-        out = ic.run();
-        dir *= (1 - 2 * out) * im;
+        ic.run();
+        auto out = ic.get_outputs(2);
+        board[pos] = out[0];
+        dir *= (1 - 2 * out[1]) * im;
         pos += dir;
     }
 
