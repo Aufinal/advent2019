@@ -14,7 +14,7 @@ unordered_map<complex<int>, int> paint(IntCode &ic, int start) {
         ic.run();
         auto out = ic.get_outputs(2);
         board[pos] = out[0];
-        dir *= (1 - 2 * out[1]) * im;
+        dir *= (int)(1 - 2 * out[1]) * im;
         pos += dir;
     }
 
