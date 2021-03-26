@@ -1,3 +1,4 @@
+#pragma once
 #include <sstream>
 #include <string>
 #include <vector>
@@ -31,6 +32,15 @@ vector<long> parseint(const vector<string> &vec) {
     vector<long> res;
     for (auto elt : vec) {
         res.push_back(stol(elt));
+    }
+
+    return res;
+}
+
+vector<long> parsechar(const string &str, char offset = '0') {
+    vector<long> res;
+    for (auto elt : str) {
+        res.push_back(elt - offset);
     }
 
     return res;
