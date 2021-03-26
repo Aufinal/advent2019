@@ -1,8 +1,8 @@
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <queue>
 #include <tuple>
+#include <unordered_map>
 
 #include "strings.hh"
 
@@ -14,6 +14,7 @@ enum State {
 class IntCode {
     unordered_map<long, long> memory;
     queue<long> inputs;
+    deque<long> outputs;
 
     long cursor;
     long offset;
@@ -28,7 +29,6 @@ class IntCode {
    public:
     vector<long> program;
     State state;
-    queue<long> outputs;
 
     IntCode(vector<long> prog) { program = prog; }
     IntCode(string filename) {
@@ -51,7 +51,13 @@ class IntCode {
 
     long get_output() {
         long res = outputs.front();
-        outputs.pop();
+        outputs.pop_front();
+        return res;
+    }
+
+    vector<long> get_outputs() {
+        vector<long> res(outputs.begin(), outputs.end());
+        outputs.clear();
         return res;
     }
 
@@ -59,7 +65,7 @@ class IntCode {
         vector<long> res(n, 0);
         for (int i = 0; i < n; i++) {
             res[i] = outputs.front();
-            outputs.pop();
+            outputs.pop_front();
         }
         return res;
     }
@@ -103,7 +109,7 @@ class IntCode {
                 break;
             }
             case 4:
-                outputs.push(read(m1));
+                outputs.push_back(read(m1));
                 break;
             case 5: {
                 if (read(m1) != 0) {
@@ -155,7 +161,7 @@ class IntCode {
         cursor = 0;
         offset = 0;
         std::queue<long>().swap(inputs);
-        std::queue<long>().swap(outputs);
+        outputs.clear();
         state = ok;
     }
 
