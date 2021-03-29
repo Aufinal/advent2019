@@ -16,12 +16,8 @@ class Matrix {
    public:
     int size_x;
     int size_y;
-    int operator()(int x, int y) { return data[index(x, y)]; }
-    int operator[](complex<int> z) {
-        if (real(z) < 0 || real(z) > size_x || imag(z) < 0 || imag(z) > size_y)
-            return -1;
-        return data[index(real(z), imag(z))];
-    }
+    long& operator()(int x, int y) { return data[index(x, y)]; }
+    long& operator[](complex<int> z) { return data[index(real(z), imag(z))]; }
 
     Matrix(vector<long> v) {
         size_x = find(v.begin(), v.end(), 10) - v.begin();

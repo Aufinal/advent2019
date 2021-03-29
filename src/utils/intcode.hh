@@ -161,7 +161,7 @@ class IntCode {
         for (auto elt : program) memory[idx++] = elt;
         cursor = 0;
         offset = 0;
-        std::queue<long>().swap(inputs);
+        queue<long>().swap(inputs);
         outputs.clear();
         state = ok;
     }

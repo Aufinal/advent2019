@@ -2,34 +2,7 @@
 
 #include "utils/intcode.hh"
 #include "utils/math.hh"
-
-class Matrix {
-    vector<long> data;
-
-    int index(int x, int y) { return y * (size_x + 1) + x; }
-
-   public:
-    int size_x;
-    int size_y;
-    int operator()(int x, int y) { return data[index(x, y)]; }
-    int operator[](complex<int> z) {
-        if (real(z) < 0 || real(z) > size_x || imag(z) < 0 || imag(z) > size_y)
-            return -1;
-        return data[index(real(z), imag(z))];
-    }
-
-    Matrix(vector<long> v) {
-        size_x = find(v.begin(), v.end(), 10) - v.begin();
-        size_y = v.size() / (size_x + 1);
-        data = v;
-    }
-
-    void print() {
-        for (auto elt : data) {
-            cout << char(elt);
-        }
-    }
-};
+#include "utils/matrix.hh"
 
 int part_1(Matrix& m) {
     int res = 0;

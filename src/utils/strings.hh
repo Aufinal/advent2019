@@ -48,6 +48,7 @@ vector<long> parsechar(const string &str, char offset = '0') {
 
 template <class T>
 string join(T &&vec, string delim = ",") {
+    if (vec.empty()) return "";
     stringstream res;
     auto it = vec.begin();
     res << *it++;
