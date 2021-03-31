@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <list>
 
 #include "utils/intcode.hh"
 #include "utils/math.hh"
@@ -34,17 +35,17 @@ string find_path(Matrix& m) {
 
     int run = 0;
     while (!end_path) {
-        if (m[pos + dir] == 35) {
+        if (m.inbounds(pos + dir) && m[pos + dir] == 35) {
             run += 1;
             pos += dir;
         } else {
             if (run != 0) res += to_string(run) + ",";
             run = 0;
 
-            if (m[pos + im * dir] == 35) {
+            if (m.inbounds(pos + im * dir) && m[pos + im * dir] == 35) {
                 dir *= im;
                 res += "R,";
-            } else if (m[pos - im * dir] == 35) {
+            } else if (m.inbounds(pos - im * dir) && m[pos - im * dir] == 35) {
                 dir *= -im;
                 res += "L,";
             } else {
@@ -56,7 +57,7 @@ string find_path(Matrix& m) {
     return res;
 }
 
-vector<string> find_patterns(string path) {
+list<string> find_patterns(string path) {
     for (int l1 = 2;; l1++) {
         if (path[l1 - 1] != ',') continue;
 
@@ -91,47 +92,37 @@ vector<string> find_patterns(string path) {
                 tmp = replace(tmp, ",", "");
 
                 if (tmp == "") {
-                    string result = replace(path, p1, "A,");
-                    result = replace(result, p2, "B,");
-                    result = replace(result, p3, "C,");
+                    string main = replace(path, p1, "A,");
+                    main = replace(main, p2, "B,");
+                    main = replace(main, p3, "C,");
 
-                    result.pop_back();
+                    main.pop_back();
                     p1.pop_back();
                     p2.pop_back();
                     p3.pop_back();
 
-                    return vector<string>({result, p1, p2, p3});
+                    return {main, p1, p2, p3};
                 }
             }
         }
     }
 
-    return vector<string>();
-}
-
-void input_str(IntCode& ic, string s) {
-    for (auto elt : s) {
-        ic.add_input(int(elt));
-    }
-    ic.add_input(10);
+    return {};
 }
 
 int part_2(IntCode& ic, Matrix& m) {
-    auto p = find_path(m);
-    auto patterns = find_patterns(p);
+    auto path = find_path(m);
+    auto patterns = find_patterns(path);
+    patterns.push_back("n");
+
     ic.program[0] = 2;
+
     ic.init();
-    ic.run();
-    for (auto pat : patterns) {
-        input_str(ic, pat);
-        ic.run();
-    }
-    ic.add_input(int('n'), 10);
+    ic.input_strlist(patterns);
     ic.run();
 
     auto v = ic.get_outputs();
-
-    return v[v.size() - 1];
+    return v.back();
 }
 
 int main(int argc, char* argv[]) {

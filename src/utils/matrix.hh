@@ -45,4 +45,8 @@ class Matrix {
             cout << char(elt);
         }
     }
+
+    bool inbounds(Point p) {
+        return !(real(p) < 0 || real(p) > size_x || imag(p) < 0 || imag(p) > size_y);
+    }
 };

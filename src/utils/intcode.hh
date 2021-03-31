@@ -1,6 +1,7 @@
 #pragma once
 #include <fstream>
 #include <iostream>
+#include <list>
 #include <queue>
 #include <tuple>
 #include <unordered_map>
@@ -27,9 +28,25 @@ class IntCode {
         return make_tuple(t, instr % 10, (instr / 10) % 10, (instr / 100) % 10);
     }
 
+    long read(short mode) {
+        if (mode == 1) {
+            return memory[cursor++];
+        } else {
+            long address = (mode / 2) * offset + memory[cursor++];
+            return memory[address];
+        }
+    }
+
+    void write(long value, short mode) {
+        long address = (mode / 2) * offset + memory[cursor++];
+        memory[address] = value;
+    }
+
    public:
     vector<long> program;
     State state;
+
+    // Constructors
 
     IntCode(vector<long> prog) { program = prog; }
     IntCode(string filename) {
@@ -40,6 +57,8 @@ class IntCode {
         }
     }
 
+    // Input management
+
     void add_input() {}
 
     template <typename... Args>
@@ -47,6 +66,22 @@ class IntCode {
         inputs.push(i);
         add_input(args...);
     }
+
+    void input_string(string str) {
+        for (auto c : str) {
+            add_input(c);
+        }
+
+        add_input('\n');
+    }
+
+    void input_strlist(list<string> str_list) {
+        for (auto str : str_list) {
+            input_string(str);
+        }
+    }
+
+    // Output management
 
     bool has_output() { return !outputs.empty(); }
 
@@ -73,19 +108,7 @@ class IntCode {
 
     long output_mem(long address) { return memory[address]; }
 
-    long read(short mode) {
-        if (mode == 1) {
-            return memory[cursor++];
-        } else {
-            long address = (mode / 2) * offset + memory[cursor++];
-            return memory[address];
-        }
-    }
-
-    void write(long value, short mode) {
-        long address = (mode / 2) * offset + memory[cursor++];
-        memory[address] = value;
-    }
+    // Running the computer
 
     void advance() {
         state = ok;
