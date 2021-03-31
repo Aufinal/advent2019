@@ -38,6 +38,16 @@ struct hash<pair<T, U>> {
         return h1 ^ (h2 << 1);
     }
 };
+
+template <class T>
+bool operator<(const complex<T>& k1, const complex<T>& k2) {
+    return make_pair(real(k1), imag(k1)) < make_pair(real(k2), imag(k2));
+}
+
+template <class T>
+bool operator>(const complex<T>& k1, const complex<T>& k2) {
+    return make_pair(real(k1), imag(k1)) > make_pair(real(k2), imag(k2));
+}
 }  // namespace std
 
 vector<int> digits(int x, int b = 10) {

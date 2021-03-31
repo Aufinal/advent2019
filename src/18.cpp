@@ -11,12 +11,9 @@
 
 using namespace std;
 
-using Point = complex<int>;
-
 void explore(Matrix m, int& n_keys, vector<vector<int>>& distances,
              vector<int>& needed_keys, vector<int>& start) {
     vector<Point> start_pos(26);
-    vector<Point> directions = {Point(0, 1), Point(0, -1), Point(-1, 0), Point(1, 0)};
 
     for (int i = 0; i < m.size_x; i++) {
         for (int j = 0; j < m.size_y; j++) {

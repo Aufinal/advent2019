@@ -7,6 +7,9 @@
 #include "strings.hh"
 
 using namespace std;
+using Point = complex<int>;
+
+const vector<Point> directions = {Point(0, 1), Point(0, -1), Point(-1, 0), Point(1, 0)};
 
 class Matrix {
     vector<long> data;
@@ -17,7 +20,7 @@ class Matrix {
     int size_x;
     int size_y;
     long& operator()(int x, int y) { return data[index(x, y)]; }
-    long& operator[](complex<int> z) { return data[index(real(z), imag(z))]; }
+    long& operator[](Point z) { return data[index(real(z), imag(z))]; }
 
     Matrix(vector<long> v) {
         size_x = find(v.begin(), v.end(), 10) - v.begin();
@@ -32,7 +35,6 @@ class Matrix {
         if (file.is_open()) {
             buffer << file.rdbuf();
         }
-
         data = parsechar(buffer.str(), 0);
         size_x = find(data.begin(), data.end(), 10) - data.begin();
         size_y = data.size() / (size_x + 1);
