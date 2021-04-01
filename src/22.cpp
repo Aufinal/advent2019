@@ -58,15 +58,20 @@ ll shuffle(string filename, ll card, ll n_cards) {
 }
 
 ll part_2(string filename, ll card, ll n_cards, ll n_repeats) {
-    ll zero = shuffle(filename, 0LL, n_cards);
-    ll one = shuffle(filename, 1LL, n_cards);
+    // The transformation is necessarily of the form ax + b % n_cards
+    ll zero = shuffle(filename, 0LL, n_cards);  // b
+    ll one = shuffle(filename, 1LL, n_cards);   // a + b
 
     ll a = (one - zero + n_cards) % n_cards;
+
+    // Inverse iteration : x -> (x - b) / a
     ll inva = powmod(a, n_cards - 2, n_cards);
 
+    // Fixed point of both iterations : f = b / (1 - a)
     ll inv_1ma = powmod(1 - a + n_cards, n_cards - 2, n_cards);
     ll fixed_point = mulmod(zero, inv_1ma, n_cards);
 
+    // n-th iterate is a^n(x - f) + f
     ll translated = (card - fixed_point + n_cards) % n_cards;
     ll res = mulmod(powmod(inva, n_repeats, n_cards), translated, n_cards);
     res = (res + fixed_point) % n_cards;
