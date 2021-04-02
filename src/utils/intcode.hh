@@ -85,6 +85,8 @@ class IntCode {
 
     bool has_output() { return !outputs.empty(); }
 
+    bool has_output(uint n) { return outputs.size() >= n; }
+
     long get_output() {
         long res = outputs.front();
         outputs.pop_front();
@@ -184,7 +186,7 @@ class IntCode {
         for (auto elt : program) memory[idx++] = elt;
         cursor = 0;
         offset = 0;
-        queue<long>().swap(inputs);
+        inputs = queue<long>();
         outputs.clear();
         state = ok;
     }
