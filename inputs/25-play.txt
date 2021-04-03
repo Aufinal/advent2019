@@ -1,0 +1,29 @@
+west
+take ornament
+south
+east
+take weather machine
+west
+north
+west
+take astrolabe
+north
+take fuel cell
+south
+south
+take hologram
+north
+east
+east
+east
+take mug
+north
+take monolith
+south
+south
+west
+north
+west
+take bowl of rice
+north
+west
