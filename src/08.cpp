@@ -6,15 +6,13 @@
 vector<int> parse(string filename) {
     ifstream file(filename);
     string line;
-    vector<int> res;
 
-    if (file.is_open() && getline(file, line)) {
-        for (auto c : line) {
-            res.push_back(c - '0');
-        }
+    if (file.is_open()) {
+        getline(file, line);
+        file.close();
     }
 
-    return res;
+    return parsechar(line);
 }
 
 int part_1(vector<int>& image, int x_len, int y_len) {

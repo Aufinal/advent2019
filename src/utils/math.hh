@@ -1,7 +1,5 @@
 #pragma once
-#include <algorithm>
 #include <complex>
-#include <utility>
 
 using namespace std;
 
@@ -49,17 +47,6 @@ bool operator>(const complex<T>& k1, const complex<T>& k2) {
     return make_pair(real(k1), imag(k1)) > make_pair(real(k2), imag(k2));
 }
 }  // namespace std
-
-vector<int> digits(int x, int b = 10) {
-    vector<int> res;
-    while (x != 0) {
-        res.push_back(x % b);
-        x /= b;
-    }
-
-    reverse(res.begin(), res.end());
-    return res;
-}
 
 template <typename T>
 int sgn(T x, T y = T(0)) {

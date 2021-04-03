@@ -1,36 +1,35 @@
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
+#include <list>
 #include <unordered_set>
-#include <vector>
 
 using namespace std;
 
-vector<int> readlines_to_int(string filename) {
-    vector<int> vec;
+list<int> parse_modules(string filename) {
+    list<int> modules;
     ifstream file(filename);
     string line;
     if (file.is_open()) {
         while (getline(file, line)) {
-            vec.push_back(stoi(line));
+            modules.push_back(stoi(line));
         }
     }
     file.close();
-    return vec;
+    return modules;
 }
 
-int part_1(vector<int> &vec) {
+int part_1(list<int> &modules) {
     int sum = 0;
-    for (auto &elt : vec) {
+    for (auto elt : modules) {
         sum += elt / 3 - 2;
     }
 
     return sum;
 }
 
-int part_2(vector<int> &vec) {
+int part_2(list<int> &modules) {
     int sum = 0;
-    for (auto &&elt : vec) {
+    for (auto elt : modules) {
         while (elt > 5) {
             elt = elt / 3 - 2;
             sum += elt;
@@ -44,9 +43,10 @@ int main(int argc, char *argv[]) {
         throw invalid_argument("Must supply filename !");
     }
     string filename = argv[1];
-    auto vec = readlines_to_int(filename);
-    cout << "Part 1 : " << part_1(vec) << endl;
-    cout << "Part 2 : " << part_2(vec) << endl;
+    auto modules = parse_modules(filename);
+
+    cout << "Part 1 : " << part_1(modules) << endl;
+    cout << "Part 2 : " << part_2(modules) << endl;
 
     return 0;
 }

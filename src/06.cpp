@@ -5,30 +5,29 @@
 
 #include "utils/strings.hh"
 
-typedef unordered_map<string, vector<string>> umsvs;
-typedef unordered_map<string, string> umss;
+// oriented tree by parent/list of children
+typedef unordered_map<string, string> PTree;
+typedef unordered_map<string, vector<string>> CTree;
 
-tuple<umss, umsvs> parse(string filename) {
-    umsvs children;
-    umss parent;
+tuple<PTree, CTree> parse(string filename) {
+    CTree children;
+    PTree parent;
     ifstream file(filename);
     string line;
     if (file.is_open()) {
         while (getline(file, line)) {
-            vector<string> v = split(line, ")");
-            if (children.count(v[0])) {
-                children[v[0]].push_back(v[1]);
-            } else {
-                children[v[0]] = {v[1]};
-            }
+            auto v = split(line, ")");
+            children[v[0]].push_back(v[1]);
             parent[v[1]] = v[0];
         }
+
+        file.close();
     }
 
     return make_tuple(parent, children);
 }
 
-int sum_orbits(umsvs &tree, string node, int cur_sum) {
+int sum_orbits(CTree &tree, string node, int cur_sum) {
     int res = cur_sum;
     if (!tree.count(node)) {
         return res;
@@ -40,24 +39,24 @@ int sum_orbits(umsvs &tree, string node, int cur_sum) {
     return res;
 }
 
-vector<string> path_to_root(umss &parent, string node) {
-    vector<string> res = {node};
-    while (parent.count(node)) {
-        node = parent[node];
+vector<string> path_to_root(PTree &tree, string node) {
+    vector<string> res;
+    while (tree.count(node)) {
+        node = tree[node];
         res.push_back(node);
     }
 
     return res;
 }
 
-int part_1(umsvs &tree) { return sum_orbits(tree, "COM", 0); }
-int part_2(umss &parent, string a, string b) {
-    auto path_a = path_to_root(parent, a);
-    auto path_b = path_to_root(parent, b);
+int part_1(CTree &tree) { return sum_orbits(tree, "COM", 0); }
+int part_2(PTree &tree, string a, string b) {
+    auto path_a = path_to_root(tree, a);
+    auto path_b = path_to_root(tree, b);
     auto s = path_a.size();
     auto t = path_b.size();
-    auto c = 1;
-    while (path_a[s - c] == path_b[t - c]) c++;
+    auto c = 0;
+    while (path_a[s - c - 1] == path_b[t - c - 1]) c++;
     return s + t - 2 * c;
 }
 
@@ -67,11 +66,9 @@ int main(int argc, char *argv[]) {
     }
     string filename = argv[1];
 
-    umsvs tree;
-    umss parent;
-    tie(parent, tree) = parse(filename);
-    cout << "Part 1 : " << part_1(tree) << endl;
-    cout << "Part 2 : " << part_2(parent, "YOU", "SAN") << endl;
+    auto [ptree, ctree] = parse(filename);
+    cout << "Part 1 : " << part_1(ctree) << endl;
+    cout << "Part 2 : " << part_2(ptree, "YOU", "SAN") << endl;
 
     return 0;
 }

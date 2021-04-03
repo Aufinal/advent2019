@@ -37,8 +37,8 @@ vector<long> parseint(const vector<string> &vec) {
     return res;
 }
 
-vector<long> parsechar(const string &str, char offset = '0') {
-    vector<long> res;
+vector<int> parsechar(const string &str, char offset = '0') {
+    vector<int> res;
     for (auto elt : str) {
         res.push_back(elt - offset);
     }

@@ -22,7 +22,7 @@ int part_2(IntCode &ic, int target) {
         }
     }
 
-    return 0;
+    return -1;
 }
 
 int main(int argc, char *argv[]) {
@@ -33,10 +33,8 @@ int main(int argc, char *argv[]) {
 
     auto ic = IntCode(filename);
 
-    int res1 = part_1(ic);
-    int res2 = part_2(ic, 19690720);
-    cout << "Part 1 : " << res1 << endl;
-    cout << "Part 2 : " << res2 << endl;
+    cout << "Part 1 : " << part_1(ic) << endl;
+    cout << "Part 2 : " << part_2(ic, 19690720) << endl;
 
     return 0;
 }

@@ -1,8 +1,17 @@
 #include <iostream>
-#include <tuple>
+#include <list>
 
-#include "utils/math.hh"
-#include "utils/strings.hh"
+using namespace std;
+
+list<int> digits(int x) {
+    list<int> res;
+    while (x != 0) {
+        res.push_back(x % 10);
+        x /= 10;
+    }
+
+    return res;
+}
 
 bool test(int x, bool part2) {
     auto d = digits(x);
@@ -11,7 +20,7 @@ bool test(int x, bool part2) {
     bool has_run = false;
 
     for (auto cur : d) {
-        if (cur < prev) {
+        if (cur > prev) {
             return false;
         } else if (cur == prev) {
             run += 1;
@@ -33,8 +42,8 @@ int main(int argc, char *argv[]) {
     int part1 = 0;
     int part2 = 0;
     for (int i = min; i <= max; i++) {
-        part1 += (int)test(i, false);
-        part2 += (int)test(i, true);
+        part1 += test(i, false);
+        part2 += test(i, true);
     }
 
     cout << "Part 1 : " << part1 << endl;
