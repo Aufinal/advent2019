@@ -1,13 +1,12 @@
+#include "utils/coords.hh"
 #include "utils/intcode.hh"
-#include "utils/math.hh"
 
-using Panel = complex<int>;
-using Hull = unordered_map<Panel, int>;
+using Hull = unordered_map<Coord, int>;
 
 Hull paint(IntCode &ic, int start) {
-    Panel pos(0, 0);
-    complex<int> dir(0, 1);
-    const complex<int> im(0, 1);
+    Coord pos(0, 0);
+    Coord dir(0, 1);
+    const Coord im(0, 1);
     Hull hull;
     ic.init();
     hull[pos] = start;
@@ -34,15 +33,15 @@ void part_2(IntCode &ic) {
     auto board = paint(ic, 1);
 
     for (auto [key, val] : board) {
-        min_x = min(min_x, real(key));
-        max_x = max(max_x, real(key));
-        min_y = min(min_y, imag(key));
-        max_y = max(max_y, imag(key));
+        min_x = min(min_x, key.x);
+        max_x = max(max_x, key.x);
+        min_y = min(min_y, key.y);
+        max_y = max(max_y, key.y);
     }
 
     for (int i = max_y; i >= min_y; i--) {
         for (int j = min_x; j <= max_x; j++) {
-            cout << (board[Panel(j, i)] ? "  " : "\u2588\u2588");
+            cout << (board[Coord(j, i)] ? "  " : "\u2588\u2588");
         }
         cout << endl;
     }

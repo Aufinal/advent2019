@@ -1,11 +1,8 @@
 #include <climits>
-#include <fstream>
-#include <iostream>
-#include <unordered_map>
 #include <unordered_set>
 
 #include "utils/coords.hh"
-#include "utils/strings.hh"
+#include "utils/misc.hh"
 
 pair<vector<string>, vector<string>> parse(string filename) {
     fstream file(filename);

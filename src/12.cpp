@@ -1,10 +1,8 @@
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <tuple>
 
-#include "utils/math.hh"
-#include "utils/strings.hh"
+#include "utils/misc.hh"
 
 tuple<vector<int>, vector<int>, vector<int>> parse(string filename) {
     ifstream file(filename);

@@ -1,7 +1,6 @@
-#include <fstream>
 #include <iostream>
 
-#include "utils/strings.hh"
+#include "utils/misc.hh"
 
 int part_1(vector<int>& image, int x_len, int y_len) {
     int idx = 0, min = x_len * y_len, prod = 0;

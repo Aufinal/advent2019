@@ -1,12 +1,11 @@
 #pragma once
-#include <fstream>
 #include <iostream>
 #include <list>
 #include <queue>
 #include <tuple>
 #include <unordered_map>
 
-#include "strings.hh"
+#include "misc.hh"
 
 enum State {
     ok,

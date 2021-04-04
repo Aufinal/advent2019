@@ -3,7 +3,6 @@
 #include <queue>
 #include <unordered_set>
 
-#include "utils/coords.hh"
 #include "utils/matrix.hh"
 
 using AstField = vector<Coord>;

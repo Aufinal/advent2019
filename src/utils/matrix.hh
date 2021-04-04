@@ -1,12 +1,9 @@
 #pragma once
-#include <complex>
 #include <fstream>
-#include <iostream>
+#include <sstream>
 #include <vector>
 
 #include "coords.hh"
-
-using namespace std;
 
 class Matrix {
     vector<char> data;

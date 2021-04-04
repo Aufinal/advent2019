@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "utils/intcode.hh"
 
 string command_gray(int n, vector<string> items) {

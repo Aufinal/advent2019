@@ -1,9 +1,8 @@
-#include <fstream>
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 
-#include "utils/strings.hh"
+#include "utils/misc.hh"
 
 using ReactionMap = unordered_map<string, pair<long, unordered_map<string, long>>>;
 

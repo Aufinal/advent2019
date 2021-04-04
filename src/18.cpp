@@ -6,8 +6,8 @@
 #include <stack>
 #include <unordered_map>
 
-#include "utils/math.hh"
 #include "utils/matrix.hh"
+#include "utils/misc.hh"
 
 using namespace std;
 

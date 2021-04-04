@@ -1,5 +1,4 @@
 #include "utils/intcode.hh"
-#include "utils/math.hh"
 
 int part_1(IntCode &ic) {
     ic.start();

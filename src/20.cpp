@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "utils/math.hh"
 #include "utils/matrix.hh"
+#include "utils/misc.hh"
 
 void parse(Matrix& m, Coord& start_pos, Coord& end_pos,
            unordered_map<Coord, Coord>& portals,

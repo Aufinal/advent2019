@@ -2,7 +2,6 @@
 #include <list>
 
 #include "utils/intcode.hh"
-#include "utils/math.hh"
 #include "utils/matrix.hh"
 
 int part_1(Matrix& m) {

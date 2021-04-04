@@ -1,11 +1,40 @@
 #pragma once
 #include <fstream>
 #include <iterator>
-#include <sstream>
-#include <string>
 #include <vector>
 
 using namespace std;
+
+namespace std {
+
+// Hashing function for generic pairs
+template <class T, class U>
+struct hash<pair<T, U>> {
+    size_t operator()(pair<T, U> const &p) const noexcept {
+        size_t h1 = hash<T>{}(p.first);
+        size_t h2 = hash<U>{}(p.second);
+        return h1 ^ (h2 << 1);
+    }
+};
+
+// Boost hash::combine function for hashing vectors
+template <>
+struct hash<vector<int>> {
+    size_t operator()(vector<int> const &vec) const noexcept {
+        size_t seed = vec.size();
+        for (auto &i : vec) {
+            seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+        return seed;
+    }
+};
+}  // namespace std
+
+// Computes the sign of x - y
+template <typename T>
+int sgn(T x, T y = T(0)) {
+    return (y < x) - (x < y);
+}
 
 vector<string> split(const string &str, const string &delim = ",") {
     vector<string> tokens;
@@ -30,6 +59,7 @@ string replace(string str, const string &from, const string &to) {
     return str;
 }
 
+// Parses string into sequence of ints
 vector<int> parseint(string filename) {
     ifstream file(filename);
     string line;
@@ -45,6 +75,7 @@ vector<int> parseint(string filename) {
     return res;
 }
 
+// Printing vectors as [a, b, c]
 template <class T>
 ostream &operator<<(ostream &os, const vector<T> &c) {
     os << '[';

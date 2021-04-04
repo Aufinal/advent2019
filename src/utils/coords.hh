@@ -55,6 +55,7 @@ class Coord {
 Coord operator+(Coord lhs, const Coord& rhs) { return lhs += rhs; }
 Coord operator-(Coord lhs, const Coord& rhs) { return lhs -= rhs; }
 Coord operator*(Coord lhs, const int& rhs) { return lhs *= rhs; }
+Coord operator*(const int& lhs, Coord rhs) { return rhs *= lhs; }
 Coord operator*(Coord lhs, const Coord& rhs) { return lhs *= rhs; }
 Coord operator/(Coord lhs, const int& rhs) { return lhs /= rhs; }
 

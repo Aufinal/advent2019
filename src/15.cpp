@@ -2,7 +2,6 @@
 
 #include "utils/coords.hh"
 #include "utils/intcode.hh"
-#include "utils/math.hh"
 
 using Plane = unordered_map<Coord, int>;
 

@@ -1,8 +1,6 @@
-#include <fstream>
 #include <iostream>
 
-#include "utils/strings.hh"
-using namespace std;
+#include "utils/misc.hh"
 
 inline int sign(int i, int n) {
     int k = (i % (4 * n)) / n;
