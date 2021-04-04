@@ -12,7 +12,8 @@ vector<int> parse(string filename) {
         file.close();
     }
 
-    return parsechar(line);
+    auto v = parsechar(line);
+    return vector<int>(v.begin(), v.end());
 }
 
 int part_1(vector<int>& image, int x_len, int y_len) {

@@ -28,15 +28,6 @@ string replace(string str, const string &from, const string &to) {
     return str;
 }
 
-vector<long> parseint(const vector<string> &vec) {
-    vector<long> res;
-    for (auto elt : vec) {
-        res.push_back(stol(elt));
-    }
-
-    return res;
-}
-
 vector<int> parsechar(const string &str, char offset = '0') {
     vector<int> res;
     for (auto elt : str) {

@@ -1,19 +1,17 @@
 #include <stack>
-#include <utility>
 
+#include "utils/coords.hh"
 #include "utils/intcode.hh"
 #include "utils/math.hh"
 
-using Point = complex<int>;
-using Board = unordered_map<Point, int>;
+using Plane = unordered_map<Coord, int>;
 
 inline int inv_dir(int i) { return i + 1 - 2 * (i % 2); }
 
 void explore(IntCode &ic) {
-    Board map;
-    vector<Point> directions = {Point(0, 1), Point(0, -1), Point(-1, 0), Point(1, 0)};
-    Point pos(0, 0);
-    Point oxygen;
+    Plane map;
+    Coord pos(0, 0);
+    Coord oxygen;
 
     // We start on a valid tile
     int out = 1;
@@ -61,9 +59,9 @@ void explore(IntCode &ic) {
     } while (!exploration.empty());
 
     // Now, we have explored everything : classic DFS
-    Board distances;
+    Plane distances;
     distances[oxygen] = 0;
-    queue<Point> bfs;
+    queue<Coord> bfs;
     int max_distance = 0;
     bfs.push(oxygen);
 
@@ -81,7 +79,7 @@ void explore(IntCode &ic) {
         }
     }
 
-    cout << "Part 1 : " << distances[Point(0, 0)] << endl;
+    cout << "Part 1 : " << distances[Coord(0, 0)] << endl;
     cout << "Part 2 : " << max_distance << endl;
 }
 
@@ -91,7 +89,7 @@ int main(int argc, char *argv[]) {
     }
     string filename = argv[1];
 
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
     explore(ic);
 
     return 0;

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
-#include <utility>
 
 #include "utils/strings.hh"
 
@@ -29,10 +28,13 @@ ReactionMap parse(string filename) {
 
             res[name_rhs] = make_pair(quant_rhs, lhs);
         }
+        file.close();
     }
 
     return res;
 }
+
+inline long ceildiv(long a, long b) { return a / b + (a % b != 0); }
 
 void produce_fuel(ReactionMap& reactions, unordered_map<string, long>& quantities,
                   long n = 1) {
@@ -43,9 +45,8 @@ void produce_fuel(ReactionMap& reactions, unordered_map<string, long>& quantitie
     while (!negative.empty()) {
         auto reactant = *negative.begin();
         auto reaction = reactions[reactant];
-        auto needed = -quantities[reactant];
 
-        auto quotient = needed / reaction.first + (needed % reaction.first != 0);
+        auto quotient = ceildiv(-quantities[reactant], reaction.first);
         for (auto [key, val] : reaction.second) {
             quantities[key] -= quotient * val;
             if (quantities[key] < 0 && key != "ORE") negative.insert(key);
@@ -66,17 +67,15 @@ long part_2(ReactionMap& reactions, long ore) {
     unordered_map<string, long> quantities;
     quantities["ORE"] = ore;
     long fuel = 0;
-    long can_produce;
+    long can_produce = ore;
 
     while (can_produce) {
-        can_produce = quantities["ORE"];
         long result = 0;
         do {
             unordered_map<string, long> qcopy(quantities);
             produce_fuel(reactions, qcopy, can_produce);
             result = qcopy["ORE"];
-            if (result < 0) can_produce /= 2;
-        } while (result < 0);
+        } while ((result < 0) && (can_produce /= 2));
 
         produce_fuel(reactions, quantities, can_produce);
         fuel += can_produce;
@@ -94,8 +93,7 @@ int main(int argc, char* argv[]) {
     auto reactions = parse(filename);
 
     cout << "Part 1 : " << part_1(reactions) << endl;
-
-    cout << "Part 2 : " << part_2(reactions, 1000000000000) << endl;
+    cout << "Part 2 : " << part_2(reactions, 1e12L) << endl;
 
     return 0;
 }

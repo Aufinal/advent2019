@@ -1,8 +1,7 @@
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <vector>
 
+#include "utils/strings.hh"
 using namespace std;
 
 inline int sign(int i, int n) {
@@ -13,15 +12,14 @@ inline int sign(int i, int n) {
 vector<int> parse(string filename) {
     ifstream file(filename);
     string line;
-    vector<int> res;
 
-    if (file.is_open() && getline(file, line)) {
-        for (auto& c : line) {
-            res.push_back(c - '0');
-        }
+    if (file.is_open()) {
+        getline(file, line);
+        file.close();
     }
 
-    return res;
+    auto v = parsechar(line);
+    return vector<int>(v.cbegin(), v.cend());
 }
 
 void fft(vector<int>& input) {

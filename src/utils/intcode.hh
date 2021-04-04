@@ -48,12 +48,16 @@ class IntCode {
 
     // Constructors
 
-    IntCode(vector<long> prog) { program = prog; }
     IntCode(string filename) {
         ifstream file(filename);
         string line;
-        if (file.is_open() && getline(file, line)) {
-            program = parseint(split(line));
+        if (file.is_open()) {
+            getline(file, line);
+            file.close();
+        }
+
+        for (auto s : split(line)) {
+            program.push_back(stol(s));
         }
     }
 

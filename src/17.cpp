@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
     }
     string filename = argv[1];
 
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
     ic.start();
     auto output = ic.get_outputs();
     auto m = Matrix(output);

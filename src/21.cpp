@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     }
     string filename = argv[1];
 
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
 
     cout << "Part 1 : " << part_1(ic) << endl;
     cout << "Part 2 : " << part_2(ic) << endl;

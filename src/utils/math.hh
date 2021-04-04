@@ -19,15 +19,6 @@ double argument(complex<T> x) {
 }
 
 namespace std {
-template <class T>
-struct hash<complex<T>> {
-    size_t operator()(complex<T> const& s) const noexcept {
-        size_t h1 = hash<T>{}(real(s));
-        size_t h2 = hash<T>{}(imag(s));
-        return h1 ^ (h2 << 1);
-    }
-};
-
 template <class T, class U>
 struct hash<pair<T, U>> {
     size_t operator()(pair<T, U> const& p) const noexcept {
@@ -36,16 +27,6 @@ struct hash<pair<T, U>> {
         return h1 ^ (h2 << 1);
     }
 };
-
-template <class T>
-bool operator<(const complex<T>& k1, const complex<T>& k2) {
-    return make_pair(real(k1), imag(k1)) < make_pair(real(k2), imag(k2));
-}
-
-template <class T>
-bool operator>(const complex<T>& k1, const complex<T>& k2) {
-    return make_pair(real(k1), imag(k1)) > make_pair(real(k2), imag(k2));
-}
 }  // namespace std
 
 template <typename T>

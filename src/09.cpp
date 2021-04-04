@@ -6,15 +6,13 @@ int main(int argc, char *argv[]) {
     }
     string filename = argv[1];
 
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
 
     ic.start(1);
-    auto res1 = ic.get_output();
-    ic.start(2);
-    auto res2 = ic.get_output();
+    cout << "Part 1 : " << ic.get_output() << endl;
 
-    cout << "Part 1 : " << res1 << endl;
-    cout << "Part 2 : " << res2 << endl;
+    ic.start(2);
+    cout << "Part 2 : " << ic.get_output() << endl;
 
     return 0;
 }

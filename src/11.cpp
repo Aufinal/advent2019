@@ -1,24 +1,27 @@
 #include "utils/intcode.hh"
 #include "utils/math.hh"
 
-unordered_map<complex<int>, int> paint(IntCode &ic, int start) {
-    complex<int> pos(0, 0);
+using Panel = complex<int>;
+using Hull = unordered_map<Panel, int>;
+
+Hull paint(IntCode &ic, int start) {
+    Panel pos(0, 0);
     complex<int> dir(0, 1);
     const complex<int> im(0, 1);
-    unordered_map<complex<int>, int> board;
+    Hull hull;
     ic.init();
-    board[pos] = start;
+    hull[pos] = start;
 
     while (ic.state != done) {
-        ic.add_input(board[pos]);
+        ic.add_input(hull[pos]);
         ic.run();
         auto out = ic.get_outputs(2);
-        board[pos] = out[0];
-        dir *= (int)(1 - 2 * out[1]) * im;
+        hull[pos] = out[0];
+        dir *= int(1 - 2 * out[1]) * im;
         pos += dir;
     }
 
-    return board;
+    return hull;
 }
 
 int part_1(IntCode &ic) {
@@ -39,7 +42,7 @@ void part_2(IntCode &ic) {
 
     for (int i = max_y; i >= min_y; i--) {
         for (int j = min_x; j <= max_x; j++) {
-            cout << (board[complex<int>(j, i)] ? "  " : "\u2588\u2588");
+            cout << (board[Panel(j, i)] ? "  " : "\u2588\u2588");
         }
         cout << endl;
     }
@@ -51,7 +54,7 @@ int main(int argc, char *argv[]) {
     }
     string filename = argv[1];
 
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
 
     cout << "Part 1 : " << part_1(ic) << endl << endl;
     part_2(ic);

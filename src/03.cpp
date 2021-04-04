@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "utils/math.hh"
+#include "utils/coords.hh"
 #include "utils/strings.hh"
 
 pair<vector<string>, vector<string>> parse(string filename) {
@@ -20,13 +20,13 @@ pair<vector<string>, vector<string>> parse(string filename) {
     return make_pair(split(line1), split(line2));
 }
 
-vector<complex<int>> traj(vector<string> cable) {
-    complex<int> one(1, 0), im(0, 1);
-    const unordered_map<char, complex<int>> directions = {
+vector<Coord> traj(vector<string> cable) {
+    Coord one(1, 0), im(0, 1);
+    const unordered_map<char, Coord> directions = {
         {'R', one}, {'U', im}, {'L', -one}, {'D', -im}};
 
-    vector<complex<int>> tr;
-    complex<int> pos(0, 0);
+    vector<Coord> tr;
+    Coord pos(0, 0);
 
     for (auto elt : cable) {
         int amount = stoi(elt.substr(1));
@@ -45,16 +45,16 @@ int part_1(vector<string> cable1, vector<string> cable2) {
     auto t1 = traj(cable1);
     auto t2 = traj(cable2);
 
-    unordered_set<complex<int>> s1(t1.begin(), t1.end());
+    unordered_set<Coord> s1(t1.begin(), t1.end());
 
-    unordered_set<complex<int>> intersection;
+    unordered_set<Coord> intersection;
     for (auto elt : t2) {
         if (s1.contains(elt)) intersection.insert(elt);
     }
 
     int min = INT_MAX;
     for (auto elt : intersection) {
-        if (manhattan(elt) < min && manhattan(elt) != 0) min = manhattan(elt);
+        if (elt.norm1() < min && elt.norm1() != 0) min = elt.norm1();
     }
 
     return min;
@@ -64,7 +64,7 @@ int part_2(vector<string> cable1, vector<string> cable2) {
     auto t1 = traj(cable1);
     auto t2 = traj(cable2);
 
-    unordered_map<complex<int>, int> map;
+    unordered_map<Coord, int> map;
     int i = 1;
     for (auto elt : t1) {
         map[elt] = i++;

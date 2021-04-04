@@ -1,40 +1,33 @@
-#include <fstream>
-#include <iostream>
 #include <map>
 #include <numeric>
 #include <queue>
 #include <unordered_set>
 
-#include "utils/math.hh"
-#include "utils/strings.hh"
+#include "utils/coords.hh"
+#include "utils/matrix.hh"
 
-vector<complex<int>> parse(string filename) {
-    vector<complex<int>> res;
-    ifstream file(filename);
-    string line;
+using AstField = vector<Coord>;
 
-    if (file.is_open()) {
-        int i = 0;
-        while (getline(file, line)) {
-            int j = 0;
-            for (auto elt : line) {
-                if (elt == '#') res.push_back(complex<int>(i, j));
-                j++;
-            }
-            i++;
+AstField parse(string filename) {
+    AstField field;
+    Matrix m(filename);
+
+    for (int x = 0; x < m.size_x; x++) {
+        for (int y = 0; y < m.size_y; y++) {
+            if (m(x, y) == '#') field.push_back(Coord(y, x));
         }
     }
 
-    return res;
+    return field;
 }
 
-int can_see(vector<complex<int>>& asteroids, complex<int> origin) {
-    unordered_set<complex<int>> directions;
+int can_see(AstField& asteroids, Coord origin) {
+    unordered_set<Coord> directions;
 
     for (auto ast : asteroids) {
+        if (ast == origin) continue;
         auto diff = ast - origin;
-        if (diff == 0) continue;
-        int d = gcd(real(diff), imag(diff));
+        int d = gcd(diff.x, diff.y);
         directions.insert(diff / d);
     }
 
@@ -42,29 +35,27 @@ int can_see(vector<complex<int>>& asteroids, complex<int> origin) {
 }
 
 struct argcomp {
-    bool operator()(const complex<int>& lhs, const complex<int>& rhs) const {
-        return argument(lhs) > argument(rhs);
+    bool operator()(const Coord& lhs, const Coord& rhs) const {
+        return lhs.arg() > rhs.arg();
     }
 };
 
 struct abscomp {
-    bool operator()(const complex<int>& lhs, const complex<int>& rhs) const {
-        return abs(lhs) > abs(rhs);
+    bool operator()(const Coord& lhs, const Coord& rhs) const {
+        return lhs.normsq() > rhs.normsq();
     }
 };
 
-vector<complex<int>> laser(vector<complex<int>>& asteroids, complex<int> origin) {
-    map<complex<int>, priority_queue<complex<int>, vector<complex<int>>, abscomp>,
-        argcomp>
-        order;
+AstField laser(AstField& asteroids, Coord origin) {
+    map<Coord, priority_queue<Coord, AstField, abscomp>, argcomp> order;
     for (auto ast : asteroids) {
+        if (ast == origin) continue;
         auto diff = ast - origin;
-        if (diff == 0) continue;
-        int d = gcd(real(diff), imag(diff));
+        int d = gcd(diff.x, diff.y);
         order[diff / d].push(ast - origin);
     }
 
-    vector<complex<int>> res;
+    AstField res;
     int n_remaining = asteroids.size() - 1;
 
     while (n_remaining) {
@@ -80,9 +71,9 @@ vector<complex<int>> laser(vector<complex<int>>& asteroids, complex<int> origin)
     return res;
 }
 
-void part_12(vector<complex<int>>& asteroids) {
+void part_12(AstField& asteroids) {
     int max = 0;
-    complex<int> argmax;
+    Coord argmax;
     for (auto ast : asteroids) {
         auto cs = can_see(asteroids, ast);
         if (cs > max) {
@@ -92,10 +83,9 @@ void part_12(vector<complex<int>>& asteroids) {
     }
 
     cout << "Part 1 : " << max << endl;
-    cout << "Optimal ast : " << argmax << endl;
 
-    auto res = laser(asteroids, argmax);
-    cout << "Part 2 : " << res[199] << endl;
+    auto res = laser(asteroids, argmax)[199];
+    cout << "Part 2 : " << 100 * res.y + res.x << endl;
 }
 
 int main(int argc, char* argv[]) {

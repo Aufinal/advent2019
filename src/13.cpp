@@ -2,8 +2,7 @@
 #include "utils/math.hh"
 
 int part_1(IntCode &ic) {
-    ic.init();
-    ic.run();
+    ic.start();
     int res = 0;
     while (ic.has_output()) {
         auto out = ic.get_outputs(3);
@@ -38,7 +37,7 @@ int main(int argc, char *argv[]) {
     }
     string filename = argv[1];
 
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
 
     cout << "Part 1 : " << part_1(ic) << endl;
     cout << "Part 2 : " << part_2(ic) << endl;

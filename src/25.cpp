@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
         throw invalid_argument("Must supply filename !");
     }
     string filename = argv[1];
-    auto ic = IntCode(filename);
+    IntCode ic(filename);
 
     run(ic);
 
