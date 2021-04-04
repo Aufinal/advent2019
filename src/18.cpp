@@ -13,14 +13,14 @@ using namespace std;
 
 void explore(Matrix m, int& n_keys, vector<vector<int>>& distances,
              vector<int>& needed_keys, vector<int>& start) {
-    vector<Point> start_pos(26);
+    vector<Coord> start_pos(26);
 
     for (int i = 0; i < m.size_x; i++) {
         for (int j = 0; j < m.size_y; j++) {
             if (m(i, j) == '@')
-                start_pos.push_back(Point(i, j));
+                start_pos.push_back(Coord(i, j));
             else if (islower(m(i, j))) {
-                start_pos[m(i, j) - 'a'] = Point(i, j);
+                start_pos[m(i, j) - 'a'] = Coord(i, j);
                 n_keys++;
             }
         }
@@ -35,10 +35,10 @@ void explore(Matrix m, int& n_keys, vector<vector<int>>& distances,
     int index = -1;
     for (auto sp : start_pos) {
         index++;
-        if (sp == Point(0, 0)) continue;
+        if (sp == Coord(0, 0)) continue;
 
-        auto bfs = queue<pair<Point, int>>();
-        auto dist = unordered_map<Point, int>();
+        auto bfs = queue<pair<Coord, int>>();
+        auto dist = unordered_map<Coord, int>();
         dist[sp] = 0;
         bfs.push(make_pair(sp, 0));
 
@@ -91,7 +91,7 @@ int solve(Matrix& m) {
     explore(m, n_keys, distances, needed_keys, start);
 
     priority_queue<Triple, vector<Triple>, greater<Triple>> dijkstra;
-    map<pair<vector<int>, int>, int> dist;
+    unordered_map<pair<vector<int>, int>, int> dist;
     vector<int> start_pos;
     for (uint i = 26; i < distances.size(); i++) {
         start_pos.push_back(i);

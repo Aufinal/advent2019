@@ -7,16 +7,16 @@
 #include "utils/math.hh"
 #include "utils/matrix.hh"
 
-void parse(Matrix& m, Point& start_pos, Point& end_pos,
-           unordered_map<Point, Point>& portals,
-           unordered_map<Point, vector<pair<Point, int>>>& distances) {
-    unordered_map<string, vector<Point>> portal_names;
-    forward_list<Point> portal_list;
+void parse(Matrix& m, Coord& start_pos, Coord& end_pos,
+           unordered_map<Coord, Coord>& portals,
+           unordered_map<Coord, vector<pair<Coord, int>>>& distances) {
+    unordered_map<string, vector<Coord>> portal_names;
+    forward_list<Coord> portal_list;
 
     for (int x = 1; x < m.size_x - 1; x++) {
         for (int y = 1; y < m.size_y - 1; y++) {
             if (isupper(m(x, y))) {
-                Point pos(x, y);
+                Coord pos(x, y);
 
                 for (auto dir : directions) {
                     if (isupper(m[pos - dir]) && m[pos + dir] == '.') {
@@ -38,15 +38,15 @@ void parse(Matrix& m, Point& start_pos, Point& end_pos,
     }
 
     for (auto p : portal_list) {
-        queue<Point> bfs;
-        unordered_map<Point, int> dist;
-        bfs.push(p);
+        queue<Coord> dijkstra;
+        unordered_map<Coord, int> dist;
+        dijkstra.push(p);
         dist[p] = 0;
 
-        while (!bfs.empty()) {
-            auto pos = bfs.front();
+        while (!dijkstra.empty()) {
+            auto pos = dijkstra.front();
             auto d = dist[pos];
-            bfs.pop();
+            dijkstra.pop();
             for (auto dir : directions) {
                 auto new_pos = pos + dir;
                 if (m[new_pos] == '#') continue;
@@ -60,7 +60,7 @@ void parse(Matrix& m, Point& start_pos, Point& end_pos,
 
                 if (!dist.count(new_pos)) {
                     dist[new_pos] = d + 1;
-                    bfs.push(new_pos);
+                    dijkstra.push(new_pos);
                 }
             }
         }
@@ -72,22 +72,22 @@ void parse(Matrix& m, Point& start_pos, Point& end_pos,
     }
 }
 
-using DistPoint = pair<int, Point>;
+using DistCoord = pair<int, Coord>;
 
 int part_1(Matrix& m) {
-    Point start_pos, end_pos;
-    unordered_map<Point, Point> portals;
-    unordered_map<Point, vector<pair<Point, int>>> portal_dist;
+    Coord start_pos, end_pos;
+    unordered_map<Coord, Coord> portals;
+    unordered_map<Coord, vector<pair<Coord, int>>> portal_dist;
 
     parse(m, start_pos, end_pos, portals, portal_dist);
-    priority_queue<DistPoint, vector<DistPoint>, greater<DistPoint>> bfs;
-    unordered_set<Point> visited;
-    bfs.push(make_pair(0, start_pos));
+    priority_queue<DistCoord, vector<DistCoord>, greater<DistCoord>> dijkstra;
+    unordered_set<Coord> visited;
+    dijkstra.push(make_pair(0, start_pos));
     visited.insert(start_pos);
 
-    while (!bfs.empty()) {
-        auto [dist, pos] = bfs.top();
-        bfs.pop();
+    while (!dijkstra.empty()) {
+        auto [dist, pos] = dijkstra.top();
+        dijkstra.pop();
 
         for (auto [portal, d] : portal_dist[pos]) {
             if (portal == end_pos) return dist + d;
@@ -96,7 +96,7 @@ int part_1(Matrix& m) {
 
             if (!visited.count(new_pos)) {
                 visited.insert(new_pos);
-                bfs.push(make_pair(dist + d + 1, new_pos));
+                dijkstra.push(make_pair(dist + d + 1, new_pos));
             }
         }
     }
@@ -104,27 +104,26 @@ int part_1(Matrix& m) {
     return -1;
 }
 
-bool is_outer(Point p, Matrix& m) {
-    return real(p) == 2 || real(p) == m.size_x - 3 || imag(p) == 2 ||
-           imag(p) == m.size_y - 3;
+bool is_outer(Coord p, Matrix& m) {
+    return p.x == 2 || p.x == m.size_x - 3 || p.y == 2 || p.y == m.size_y - 3;
 }
 
-using DistDepPoint = tuple<int, int, Point>;
+using DistDepCoord = tuple<int, int, Coord>;
 
 int part_2(Matrix& m) {
-    Point start_pos, end_pos;
-    unordered_map<Point, Point> portals;
-    unordered_map<Point, vector<pair<Point, int>>> portal_dist;
+    Coord start_pos, end_pos;
+    unordered_map<Coord, Coord> portals;
+    unordered_map<Coord, vector<pair<Coord, int>>> portal_dist;
 
     parse(m, start_pos, end_pos, portals, portal_dist);
-    priority_queue<DistDepPoint, vector<DistDepPoint>, greater<DistDepPoint>> bfs;
-    unordered_set<pair<int, Point>> visited;
-    visited.insert(make_pair(0, start_pos));
-    bfs.push(make_tuple(0, 0, start_pos));
+    priority_queue<DistDepCoord, vector<DistDepCoord>, greater<DistDepCoord>> dijkstra;
+    unordered_map<pair<int, Coord>, int> distances;
+    distances[make_pair(0, start_pos)] = 0;
+    dijkstra.push(make_tuple(0, 0, start_pos));
 
-    while (!bfs.empty()) {
-        auto [dist, depth, pos] = bfs.top();
-        bfs.pop();
+    while (!dijkstra.empty()) {
+        auto [dist, depth, pos] = dijkstra.top();
+        dijkstra.pop();
 
         for (auto [portal, d] : portal_dist[pos]) {
             if (!depth) {
@@ -138,9 +137,9 @@ int part_2(Matrix& m) {
             int new_depth = depth + (is_outer(portal, m) ? -1 : 1);
             auto new_pair = make_pair(new_depth, new_pos);
 
-            if (!visited.count(new_pair)) {
-                visited.insert(new_pair);
-                bfs.push(make_tuple(dist + d + 1, new_depth, new_pos));
+            if (!distances.count(new_pair) || distances[new_pair] > dist + d + 1) {
+                distances[new_pair] = dist + d + 1;
+                dijkstra.push(make_tuple(dist + d + 1, new_depth, new_pos));
             }
         }
     }

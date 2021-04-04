@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -28,24 +30,28 @@ string replace(string str, const string &from, const string &to) {
     return str;
 }
 
-vector<int> parsechar(const string &str, char offset = '0') {
-    vector<int> res;
-    for (auto elt : str) {
-        res.push_back(elt - offset);
+vector<int> parseint(string filename) {
+    ifstream file(filename);
+    string line;
+
+    if (file.is_open()) {
+        getline(file, line);
+        file.close();
     }
+
+    vector<int> res;
+    for (auto c : line) res.push_back(c - '0');
 
     return res;
 }
 
 template <class T>
-string join(T &&vec, string delim = ",") {
-    if (vec.empty()) return "";
-    stringstream res;
-    auto it = vec.begin();
-    res << *it++;
-    for (; it != vec.end(); it++) {
-        res << delim << *it;
+ostream &operator<<(ostream &os, const vector<T> &c) {
+    os << '[';
+    if (!c.empty()) {
+        copy(c.begin(), --c.end(), ostream_iterator<T>(os, ","));
+        cout << c.back();
     }
-
-    return res.str();
+    os << ']';
+    return os;
 }

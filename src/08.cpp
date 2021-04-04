@@ -3,19 +3,6 @@
 
 #include "utils/strings.hh"
 
-vector<int> parse(string filename) {
-    ifstream file(filename);
-    string line;
-
-    if (file.is_open()) {
-        getline(file, line);
-        file.close();
-    }
-
-    auto v = parsechar(line);
-    return vector<int>(v.begin(), v.end());
-}
-
 int part_1(vector<int>& image, int x_len, int y_len) {
     int idx = 0, min = x_len * y_len, prod = 0;
     vector<int> count(3, 0);
@@ -58,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     int x_len = 25;
     int y_len = 6;
-    auto image = parse(filename);
+    auto image = parseint(filename);
 
     cout << "Part 1 : " << part_1(image, x_len, y_len) << endl;
     part_2(image, x_len, y_len);

@@ -8,9 +8,9 @@ int step1(Matrix& m) {
 
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
-            Point p(i, j);
-            for (auto dir : directions) {
-                if (m.inbounds(p + dir) && m[p + dir] == '#') neighbors[i][j]++;
+            Coord p(i, j);
+            for (auto d : directions) {
+                if (m.inbounds(p + d) && m[p + d] == '#') neighbors[i][j]++;
             }
         }
     }
@@ -35,17 +35,10 @@ int step1(Matrix& m) {
 int part_1(Matrix m) {
     unordered_set<int> scores;
     int score;
-
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            if (m(i, j) == '#') score += 1 << (5 * j + i);
-        }
-    }
-
     do {
-        scores.insert(score);
         score = step1(m);
-    } while (!scores.count(score));
+        scores.insert(score);
+    } while (!scores.contains(score));
 
     return score;
 }
@@ -60,20 +53,18 @@ int step2(int bugs[][5][5], int max_depth, int offset) {
                 if (x == 2 && y == 2) continue;
                 n_neighbors[d_index][x][y] = 0;
 
-                for (auto dir : directions) {
-                    int dx = real(dir);
-                    int dy = imag(dir);
-
-                    if ((x + dx == 2) && (y + dy == 2)) {
+                for (auto d : directions) {
+                    if ((x + d.x == 2) && (y + d.y == 2)) {
                         for (int i = -2; i <= 2; i++) {
                             n_neighbors[d_index][x][y] +=
-                                bugs[depth + 1][2 - 2 * dx + i * dy]
-                                    [2 - 2 * dy + i * dx];
+                                bugs[depth + 1][2 - 2 * d.x + i * d.y]
+                                    [2 - 2 * d.y + i * d.x];
                         }
-                    } else if (x + dx < 0 || x + dx >= 5 || y + dy < 0 || y + dy >= 5) {
-                        n_neighbors[d_index][x][y] += bugs[depth - 1][2 + dx][2 + dy];
+                    } else if (x + d.x < 0 || x + d.x >= 5 || y + d.y < 0 ||
+                               y + d.y >= 5) {
+                        n_neighbors[d_index][x][y] += bugs[depth - 1][2 + d.x][2 + d.y];
                     } else {
-                        n_neighbors[d_index][x][y] += bugs[depth][x + dx][y + dy];
+                        n_neighbors[d_index][x][y] += bugs[depth][x + d.x][y + d.y];
                     }
                 }
             }

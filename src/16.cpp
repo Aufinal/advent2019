@@ -9,19 +9,6 @@ inline int sign(int i, int n) {
     return (2 - k) * (k % 2);
 }
 
-vector<int> parse(string filename) {
-    ifstream file(filename);
-    string line;
-
-    if (file.is_open()) {
-        getline(file, line);
-        file.close();
-    }
-
-    auto v = parsechar(line);
-    return vector<int>(v.cbegin(), v.cend());
-}
-
 void fft(vector<int>& input) {
     for (uint n = 1; n <= input.size(); n++) {
         int res = 0;
@@ -77,7 +64,7 @@ int main(int argc, char* argv[]) {
     }
     string filename = argv[1];
 
-    auto input = parse(filename);
+    auto input = parseint(filename);
 
     cout << "Part 1 : " << part_1(input, 100) << endl;
 

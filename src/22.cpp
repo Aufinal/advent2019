@@ -61,7 +61,6 @@ ll part_2(string filename, ll card, ll n_cards, ll n_repeats) {
     // The transformation is necessarily of the form ax + b % n_cards
     ll zero = shuffle(filename, 0LL, n_cards);  // b
     ll one = shuffle(filename, 1LL, n_cards);   // a + b
-
     ll a = (one - zero + n_cards) % n_cards;
 
     // Inverse iteration : x -> (x - b) / a

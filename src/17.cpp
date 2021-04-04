@@ -20,14 +20,14 @@ int part_1(Matrix& m) {
 }
 
 string find_path(Matrix& m) {
-    Point pos;
-    Point dir(0, -1);
-    Point im(0, 1);
+    Coord pos;
+    Coord dir(0, -1);
+    Coord im(0, 1);
     string res = "";
 
     for (int i = 0; i < m.size_y; i++) {
         for (int j = 0; j < m.size_x; j++) {
-            if (m(j, i) != 35 && m(j, i) != 46) pos = Point(j, i);
+            if (m(j, i) != 35 && m(j, i) != 46) pos = Coord(j, i);
         }
     }
 

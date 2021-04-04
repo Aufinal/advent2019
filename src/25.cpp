@@ -1,16 +1,5 @@
 #include "utils/intcode.hh"
 
-string parse_output(vector<long> v) {
-    std::stringstream buffer;
-    for (auto c : v) {
-        buffer << (char)c;
-    }
-
-    auto vec = split(buffer.str(), "\n\n").back();
-    vec = split(vec, "\n").front();
-    return buffer.str();
-}
-
 string command_gray(int n, vector<string> items) {
     int gray = n ^ (n >> 1);
     int prev = (n - 1) ^ ((n - 1) >> 1);
@@ -38,12 +27,15 @@ void run(IntCode& ic) {
 
     int taken = 0;
 
+    vector<long> outputs;
     while (ic.state != done) {
         ic.input_string(command_gray(++taken, items));
         ic.input_string("north");
         ic.run();
-        auto v = ic.get_outputs();
+        outputs = ic.get_outputs();
     }
+
+    for (auto c : outputs) cout << char(c);
 }
 
 int main(int argc, char* argv[]) {

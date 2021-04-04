@@ -23,10 +23,10 @@ int part_1(IntCode& ic) {
 }
 
 int part_2(IntCode& ic) {
-    list<string> bad_prog = {"NOT B J", "NOT C T", "OR T J", "AND D J",
-                             "AND H J", "NOT A T", "OR T J"};
+    list<string> prog = {"NOT B J", "NOT C T", "OR T J", "AND D J",
+                         "AND H J", "NOT A T", "OR T J"};
 
-    return launch(ic, bad_prog, 2);
+    return launch(ic, prog, 2);
 }
 
 int main(int argc, char* argv[]) {

@@ -1,51 +1,41 @@
-#include <algorithm>
-
 #include "utils/intcode.hh"
 
-int part_1(IntCode& ic, int limit) {
-    int begin = 0;
-    int res = 0;
-    for (int y = 0; y < limit; y++) {
-        int b, e;
-        for (b = begin; b < limit; b++) {
-            ic.start(b, y);
-            if (ic.get_output()) break;
-        }
+void next_line(IntCode& ic, int y, int& begin, int& end) {
+    do {
+        ic.start(begin, y);
+    } while (!ic.get_output() && ++begin);
 
-        for (e = b; e < limit; e++) {
-            ic.start(e, y);
-            if (!ic.get_output()) break;
-        }
-        begin = b % limit;
-        res += e - b;
+    end = max(end, begin);
+    do {
+        ic.start(end, y);
+    } while (ic.get_output() && ++end);
+}
+
+int part_1(IntCode& ic, int limit) {
+    int begin = 0, end = 0;
+    int res = 2;  // Isolated points
+
+    for (int y = 7; y < limit; y++) {
+        next_line(ic, y, begin, end);
+        res += end - begin;
     }
 
     return res;
 }
 
 int part_2(IntCode& ic, int square_size) {
-    int begin = 0;
-    int end = 0;
+    int begin = 0, end = 0;
     vector<int> bv, ev;
-    int y_min = 10;  // magic number
+    int y_min = 7;  // magic number
     int y = 0;
-    while (true) {
-        do {
-            ic.start(++begin, y + y_min);
-        } while (!ic.get_output());
-
-        end = max(end, begin);
-        do {
-            ic.start(++end, y + y_min);
-        } while (ic.get_output());
-
-        bv.push_back(begin--);
-        ev.push_back(end--);
+    for (;; y++) {
+        next_line(ic, y + y_min, begin, end);
+        bv.push_back(begin);
+        ev.push_back(end);
 
         if ((y >= square_size) && (ev[y - square_size + 1] - bv[y] >= square_size)) {
             return 10000 * bv[y] + y - square_size + y_min + 1;
         }
-        y += 1;
     }
 }
 
